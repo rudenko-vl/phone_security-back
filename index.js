@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import cors from "cors";
 import multer, { diskStorage, MulterError } from "multer";
 import { extname as _extname } from "path";
+import * as fs from "node:fs/promises";
 import * as WorkerController from "./controllers/WorkersController.js";
 
 // mongoose
@@ -18,6 +19,10 @@ mongoose
     console.log("DB is error", e);
   });
 
+const UPLOADS_FOLDER = path.join(__dirname, "uploads");
+if (!fs.existsSync(UPLOADS_FOLDER)) {
+  fs.mkdirSync(UPLOADS_FOLDER);
+}
 const app = express();
 app.use(express.json());
 app.use(cors());
@@ -29,7 +34,7 @@ const PORT = process.env.PORT || 3000;
 const storage = diskStorage({
   destination: (req, file, cb) => {
     // Укажите директорию для загрузки файлов
-    cb(null, "uploads/");
+    cb(null, UPLOADS_FOLDER);
   },
   filename: (req, file, cb) => {
     // Переименуйте файл для предотвращения конфликтов имен
