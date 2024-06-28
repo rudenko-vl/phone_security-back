@@ -1,21 +1,19 @@
-const mongoose = require("mongoose");
-const { Schema } = mongoose;
+import mongoose from "mongoose";
 
-const GadgetSchema = new Schema({
+const gadgetSchema = new mongoose.Schema({
   title: { type: String, required: true },
   brand: { type: String, required: true },
   model: { type: String, required: true },
   sn: { type: String, required: true },
-  image: { type: String },
+  image: { type: String, required: false },
+  purchasedOn: { type: Date, default: Date.now },
 });
 
-const UserSchema = new Schema({
+const UserSchema = new mongoose.Schema({
   name: { type: String, required: true, unique: true },
-  position: { type: String },
-  image: { type: String },
-  gadgets: [GadgetSchema],
+  position: { type: String, required: false },
+  image: { type: String, required: false },
+  gadgets: [gadgetSchema],
 });
 
-const User = mongoose.model("User", UserSchema);
-
-module.exports = User;
+export default mongoose.model("User", UserSchema);
