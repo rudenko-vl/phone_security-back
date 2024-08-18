@@ -20,14 +20,13 @@ export const create = async (req, res) => {
 
 export const removeWorker = async (req, res) => {
   try {
-    const person = await UserModel.findByIdAndDelete(req.params.id);
-    if (!person) {
-      return res.status(404).json({ message: "Пользователь не найден" });
-    }
+    const personId = req.params.id;
+    const person = await UserModel.findByIdAndDelete(personId);
+    res.json(person);
   } catch (error) {
     console.log(error);
     res.status(500).json({
-      message: "Не вдалось отримати",
+      message: "Пользователь не найден",
     });
   }
 };
@@ -105,5 +104,32 @@ export const updateUser = async (req, res) => {
     res.status(500).json({
       message: "Не вдалось змiнити",
     });
+  }
+};
+
+export const updateGadget = async (req, res) => {
+  const { userId, gadgetId } = req.params;
+  const { title, brand, model, sn, image } = req.body;
+  try {
+    const user = await UserModel.findById(userId);
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
+
+    const gadget = user.gadgets._id(gadgetId);
+    if (!gadget) {
+      return res.status(404).send("Gadget not found");
+    }
+
+    gadget.title = title;
+    gadget.brand = brand;
+    gadget.model = model;
+    gadget.sn = sn;
+    gadget.image = image;
+
+    await user.save();
+    res.send("Gadget updated successfully");
+  } catch (error) {
+    res.status(500).send(error.message);
   }
 };

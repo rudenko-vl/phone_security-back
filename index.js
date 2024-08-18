@@ -29,6 +29,7 @@ app.get("/users", UserController.getAll);
 app.get("/users/:id", UserController.getOne);
 app.delete("/users/:id", UserController.removeWorker);
 app.put("/users/:id", UserController.updateUser);
+app.put("/users/:id/gadgets/:gadgetId", UserController.updateGadget);
 
 app.listen(PORT, () => {
   console.log(`Сервер запущен на http://localhost:${PORT}`);
