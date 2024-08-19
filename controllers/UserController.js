@@ -108,20 +108,22 @@ export const updateUser = async (req, res) => {
 };
 
 export const updateGadget = async (req, res) => {
-  const { userId, gadgetId } = req.params;
-  const { title, brand, model, sn, image } = req.body;
+  const userId = req.params.id;
+  const { brand, model, sn, image } = req.body;
   try {
     const user = await UserModel.findById(userId);
     if (!user) {
       return res.status(404).send("User not found");
     }
 
-    const gadget = user.gadgets._id(gadgetId);
+    const phoneId = req.params.gadgetId;
+    const gadget = user.gadgets.id(phoneId);
+
     if (!gadget) {
       return res.status(404).send("Gadget not found");
     }
 
-    gadget.title = title;
+    gadget.title = gadget.title;
     gadget.brand = brand;
     gadget.model = model;
     gadget.sn = sn;
